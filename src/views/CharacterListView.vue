@@ -1,54 +1,63 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import axios from 'axios'
 import CharacterBox from '@/components/pages/characterList/CharacterBox.vue'
 
 const getPokemon = (limit, offset) => {
-  return fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`)
+  return axios
+    .get(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`)
     .then((result) => {
-      return result.json()
-    })
-    .then((data) => {
-      const newOffset = limit + offset
+      const newOffset = offset + limit
       dataCurrent.value = {
-        total: data.count,
+        total: result.data.count,
         offset: newOffset
       }
+      const data = result.data.results
       const pokemonList = []
-      data.results.forEach(pokemon => {
-        getPokemonData(pokemon.name)
-          .then(data => {
-            pokemonList.push(data)
-          })
+      data.forEach(pokemon => {
+        getPokemonData(pokemon.name).then((data) => {
+          pokemonList.push(data)
+        })
       })
-      console.log(pokemonList)
       return pokemonList
     })
 }
 const getPokemonData = (pokemon) => {
-  return fetch(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
-  .then((result) => {
-    return result.json()
-  })
-  .then((data) => {
-    return {
-      id: data.id,
-      name: data.name,
-      image: data.sprites.other.home.front_default,
-      types: data.types,
-      stats: data.stats
-    }
-  })
+  return axios
+    .get(`https://pokeapi.co/api/v2/pokemon/${pokemon}`)
+    .then((result) => {
+      const data = result.data
+      let evolutionChain
+      getPokemonEvolution(data.id).then((data) => {
+        evolutionChain = data
+      })
+      return {
+        id: data.id,
+        name: data.name,
+        image: data.sprites.other.home.front_default,
+        types: data.types,
+        stats: data.stats,
+        evolution: evolutionChain
+      }
+    })
+}
+const getPokemonEvolution = (id) => {
+  return axios
+    .get(`https://pokeapi.co/api/v2/evolution-chain/${id}`)
+    .then((result) => {
+      return result.data.chain.evolves_to
+    })
 }
 let allPokemonAvaliable = ref([])
+getPokemon(128,0).then((data) => {
+  allPokemonAvaliable.value = data
+})
+
 let dataCurrent = ref({
   total: 0,
   offset: 0
 })
 
-getPokemon(128,0).then((data) => {
-  allPokemonAvaliable.value = data
-})
 
 </script>
 
@@ -57,7 +66,11 @@ getPokemon(128,0).then((data) => {
     <div class="character-list__content">
       <div class="character-list__box container-center">
         <template v-for="pokemon in allPokemonAvaliable">
-          asdad
+          <CharacterBox
+            :name="pokemon.name"
+            :firstType="pokemon.types[0].type.name"
+            :image="pokemon.image"
+          />
         </template>   
       </div>
       <div
