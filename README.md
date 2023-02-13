@@ -1,6 +1,6 @@
-# vue-project
+# Pokedex-project
 
-This template should help get you started developing with Vue 3 in Vite.
+This is a generic Pokedex application with Vue 3 in Vite.
 
 ## Recommended IDE Setup
 
