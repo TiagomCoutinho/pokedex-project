@@ -1,6 +1,6 @@
 # Pokedex-project
 
-This is a generic Pokedex application with Vue 3 in Vite.
+This is a generic Pokedex application with Vue 3 in Vite, using the style from the game Super Smash Bros Ultimate.
 
 ## Recommended IDE Setup
 
