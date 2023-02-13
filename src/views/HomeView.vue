@@ -24,7 +24,7 @@ const submitForm = () => {
       <input
         class="home-view__search-pokemon"
         v-model="searchText"
-        placeholder="Pokemon name"
+        placeholder="Pokemon name/id"
       />
       <button
         class="home-view__submit"
