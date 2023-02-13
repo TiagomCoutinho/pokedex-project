@@ -1,7 +1,7 @@
 <template>
     <div class="bottom-home">
         <RouterLink class="bottom-home__press-anywhere" to="/character-list">
-            <div class="container-center">CLICK HERE TO START</div>
+            <div class="container-center">OR CLICK HERE TO SEE FULL LIST</div>
         </RouterLink>
         <div class="bottom-home__credits container-center">
             Made by 
